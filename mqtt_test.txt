@@ -1,0 +1,31 @@
+// 主程序开始
+void setup() {
+	mPython.begin();
+	myIot.setMqttCallback(msgHandles);
+	display.setCursorLine(1);
+	display.printLine("start");
+	myIot.wifiConnect("Chuang2", "hc666666");
+	while (!myIot.wifiStatus()) {yield();}
+	display.setCursorLine(2);
+	display.printLine("wifi ok");
+	myIot.init("iot.dfrobot.com.cn","yVgocmKGg","","sVRociKGgz",topics,1883);
+	myIot.connect();
+	while (!myIot.connected()) {yield();}
+	display.setCursorLine(3);
+	display.printLine("mqtt ok");
+}
+void loop() {
+	if ((buttonA.isPressed())) {
+		myIot.publish(topic_1, "2018764312黄晨");
+		display.setCursorLine(4);
+		display.printLine("发送成功");
+	}
+}
+
+
+// 事件回调函数
+void obloqMqttEventT0(String& message) {
+	rgb.write(0, 0xFF0000);
+	display.setCursorLine(1);
+	display.printLine(message);
+}
