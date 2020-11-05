@@ -1,0 +1,93 @@
+test1.
+// 主程序开始
+void setup() {
+	mPython.begin();
+	huskylens.beginI2CUntilSuccess();
+	huskylens.writeAlgorithm(ALGORITHM_FACE_RECOGNITION);
+}
+void loop() {
+	display.setCursorLine(1);
+	display.printLine("将摄像头对准人脸");
+	huskylens.request();
+	if (huskylens.isAppearDirect(HUSKYLENSResultBlock)) {
+		mind_n_id = huskylens.readBlockCenterParameterDirect().ID;
+		if ((1==mind_n_id)) {
+			display.setCursorLine(2);
+			display.printLine("2018764328梁文轩");
+			rgb.write(-1, 0xFF0000);
+		}
+		else if ((2==mind_n_id)) {
+			display.setCursorLine(2);
+			display.printLine("2018764312黄晨");
+			rgb.write(-1, 0xFF0000);
+		}
+		else if ((3==mind_n_id)) {
+			display.setCursorLine(2);
+			display.printLine("2018764312李兆敢");
+			rgb.write(-1, 0xFF0000);
+		}
+		else {
+			display.setCursorLine(1);
+			display.printLine("尚未识别");
+		}
+	}
+}
+
+
+test2.
+产品维库
+// 主程序开始
+void setup() {
+	mPython.begin();
+	huskylens.beginI2CUntilSuccess();
+	huskylens.writeAlgorithm(ALGORITHM_FACE_RECOGNITION);
+	display.setCursorLine(1);
+	display.printLine("连接wifi");
+	myIot.wifiConnect("Chuang2", "hc666666");
+	while (!myIot.wifiStatus()) {yield();}
+	mydb.setServerParameter("http://tinywebdb.appinventor.space/api", "asd12","c4eb11cc");
+	display.fillScreen(0);
+}
+void loop() {
+	display.setCursorLine(1);
+	display.printLine("将摄像头对准人脸");
+	huskylens.request();
+	if (huskylens.isAppearDirect(HUSKYLENSResultBlock)) {
+		mind_n_id = huskylens.readBlockCenterParameterDirect().ID;
+		display.setCursorLine(2);
+		display.printLine(mydb.getTag((dfstring.substring((String(mind_n_id)),0,1,0,1))));
+	}
+}
+
+
+test3.
+// 主程序开始
+void setup() {
+	mPython.begin();
+	huskylens.beginI2CUntilSuccess();
+	huskylens.writeAlgorithm(ALGORITHM_FACE_RECOGNITION);
+	display.setCursorLine(1);
+	display.printLine("连接wifi");
+	myIot.wifiConnect("Chuang2", "hc666666");
+	while (!myIot.wifiStatus()) {yield();}
+	myIot.init("iot.dfrobot.com.cn","yVgocmKGg","","sVRociKGgz",topics,1883);
+	myIot.connect();
+	display.setCursorLine(2);
+	display.printLine("mqtt连接");
+	while (!myIot.connected()) {yield();}
+	display.setCursorLine(3);
+	display.printLine("mqtt连接成功");
+	mydb.setServerParameter("http://tinywebdb.appinventor.space/api", "asd12","c4eb11cc");
+	display.fillScreen(0);
+}
+void loop() {
+	display.setCursorLine(1);
+	display.printLine("将摄像头对准人脸");
+	huskylens.request();
+	if (huskylens.isAppearDirect(HUSKYLENSResultBlock)) {
+		mind_n_id = huskylens.readBlockCenterParameterDirect().ID;
+		display.setCursorLine(2);
+		display.printLine(mydb.getTag((dfstring.substring((String(mind_n_id)),0,1,0,1))));
+		myIot.publish(topic_0, mydb.getTag((dfstring.substring((String(mind_n_id)),0,1,0,1))));
+	}
+}
